@@ -1,0 +1,6 @@
+
+{
+  "name": "HomeLinka Nigeria",
+  "description": "Premium housing platform for Abuja agents and hunters.",
+  "requestFramePermissions": ["geolocation"]
+}
