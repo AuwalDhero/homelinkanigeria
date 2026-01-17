@@ -7,7 +7,10 @@ const prisma = new PrismaClient();
 export const getPendingAgents = async (req: Request, res: Response) => {
     try {
         const agents = await prisma.user.findMany({ 
-            where: { status: 'PENDING', role: 'AGENT' } 
+            where: { 
+                status: 'PENDING', 
+                role: 'AGENT' 
+            } 
         });
         res.json(agents);
     } catch (error) {
@@ -21,7 +24,8 @@ export const updateAgentStatus = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const updated = await prisma.user.update({
-            where: { id },
+            // Fix: Cast id to string to resolve TS error 2322
+            where: { id: id as string },
             data: { status }
         });
         res.json(updated);
@@ -48,7 +52,8 @@ export const updatePropertyStatus = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const updated = await prisma.listing.update({
-            where: { id },
+            // Fix: Cast id to string to resolve TS error 2322
+            where: { id: id as string },
             data: { status }
         });
         res.json(updated);

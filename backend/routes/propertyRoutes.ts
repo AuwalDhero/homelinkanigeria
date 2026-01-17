@@ -1,8 +1,8 @@
 import { Router } from 'express';
 // FIXED: Pointing back to the 'src' folder where the file actually lives
-import { getAllProperties, createProperty, updateProperty, deleteProperty } from '../src/controllers/propertyController';
+import { getAllProperties, createProperty, updateProperty, deleteProperty } from '../src/controllers/propertyController.js';
 // FIXED: Pointing back to the 'src' folder for middleware too
-import { protect, isAgent } from '../src/middleware/auth';
+import { protect, isAgent } from '../src/middleware/auth.js';
 
 const router = Router();
 

@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './routes/authRoutes';
-import propertyRoutes from './routes/propertyRoutes';
-import adminRoutes from './routes/adminRoutes';
+import authRoutes from './routes/authRoutes.js';
+import propertyRoutes from './routes/propertyRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 // 1. FIX FOR VERCEL & PRISMA: Handle BigInt serialization
 (BigInt.prototype as any).toJSON = function () {

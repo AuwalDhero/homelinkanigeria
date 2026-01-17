@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { getPendingAgents, updateAgentStatus, getPendingProperties, updatePropertyStatus } from '../src/controllers/adminController';
-import { protect, isAdmin } from '../src/middleware/auth';
+import { getPendingAgents, updateAgentStatus, getPendingProperties, updatePropertyStatus } from '../src/controllers/adminController.js';
+import { protect, isAdmin } from '../src/middleware/auth.js';
 
 const router = Router();
 

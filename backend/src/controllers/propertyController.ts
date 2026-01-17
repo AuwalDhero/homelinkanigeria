@@ -3,6 +3,15 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+// Extending Request type to include user if not defined globally
+// Updated AuthRequest to match the global requirement
+interface AuthRequest extends Request {
+  user: {
+    id: string;
+    role: string; // Removed the '?' to make it mandatory
+  };
+}
+
 export const getAllProperties = async (req: Request, res: Response) => {
   try {
     const properties = await prisma.listing.findMany({
@@ -15,7 +24,7 @@ export const getAllProperties = async (req: Request, res: Response) => {
   }
 };
 
-export const createProperty = async (req: Request, res: Response) => {
+export const createProperty = async (req: AuthRequest, res: Response) => {
   try {
     const { title, description, price, propertyType, listingType, area, images } = req.body;
     
@@ -29,7 +38,7 @@ export const createProperty = async (req: Request, res: Response) => {
         area,
         images,
         agentId: req.user!.id,
-        status: 'PENDING' // Listings require Admin review
+        status: 'PENDING'
       }
     });
 
@@ -39,36 +48,45 @@ export const createProperty = async (req: Request, res: Response) => {
   }
 };
 
-// ADDED THIS FUNCTION
-export const updateProperty = async (req: Request, res: Response) => {
+export const updateProperty = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     
-    // Check if the property belongs to this agent before updating
-    // Note: We normally don't let agents change the 'status' back to APPROVED themselves
+    // Explicitly cast id as string to satisfy Prisma and TypeScript
     const updatedProperty = await prisma.listing.update({
       where: { 
-        id: id,
-        agentId: req.user!.id // Security: Ensure agent owns this listing
+        id: id as string, 
       },
-      data: req.body
+      data: {
+        ...req.body,
+        // Ensure the agent can only update their own property
+        agentId: req.user!.id 
+      }
     });
 
     res.json(updatedProperty);
   } catch (error) {
-    // If record not found (or doesn't belong to user), Prisma throws an error
     res.status(500).json({ message: "Error updating property or access denied" });
   }
 };
 
-export const deleteProperty = async (req: Request, res: Response) => {
+export const deleteProperty = async (req: AuthRequest, res: Response) => {
   try {
-    await prisma.listing.delete({
+    const { id } = req.params;
+
+    // Use deleteMany to filter by both ID and AgentID for security
+    // Prisma's 'delete' only allows 'id', but 'deleteMany' allows multiple filters
+    const result = await prisma.listing.deleteMany({
       where: { 
-        id: req.params.id, 
-        agentId: req.user!.id // Security: Ensure agent owns this listing
+        id: id as string, 
+        agentId: req.user!.id 
       }
     });
+
+    if (result.count === 0) {
+      return res.status(404).json({ message: "Property not found or unauthorized" });
+    }
+
     res.json({ message: "Property deleted" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting property" });

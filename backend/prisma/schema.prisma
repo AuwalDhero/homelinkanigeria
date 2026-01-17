@@ -1,4 +1,4 @@
-// backend/prisma/schema.prisma
+// backend/prisma/schema.prisma.
 
 datasource db {
   provider = "postgresql"
