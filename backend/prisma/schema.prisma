@@ -1,4 +1,4 @@
-// backend/prisma/schema.prisma.
+// backend/prisma/schema.prisma
 
 datasource db {
   provider = "postgresql"
@@ -22,37 +22,36 @@ enum Status {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  fullName      String
-  email         String    @unique
-  password      String
-  phone         String
-  whatsapp      String?
-  businessName  String?
-  role          Role      @default(AGENT)
-  status        Status    @default(PENDING) // New agents must be approved
-  listings      Listing[]
-  createdAt     DateTime  @default(now())
+  id           String    @id @default(uuid())
+  fullName     String
+  email        String    @unique
+  password     String
+  phone        String
+  whatsapp     String?
+  businessName String?
+  role         Role      @default(AGENT)
+  status       Status    @default(PENDING)
+  listings     Listing[]
+  createdAt    DateTime  @default(now())
 }
 
 model Listing {
-  id            String    @id @default(uuid())
-  title         String
-  description   String    @db.Text
-  price         Float
-  propertyType  String    // e.g., 'House', 'Apartment', 'Plot'
-  listingType   String    // 'RENT' or 'SALE'
-  area          String    // e.g., 'Gwarinpa', 'Maitama'
-  state         String    @default("FCT")
-  city          String    @default("Abuja")
-  images        String[]  // Cloudinary URLs
-  video         String?
-  status        Status    @default(PENDING) // Listings must be approved
+  id           String    @id @default(uuid())
+  title        String
+  description  String    @db.Text
+  price        Float
+  propertyType String    
+  listingType  String    
+  area         String    
+  state        String    @default("FCT")
+  city         String    @default("Abuja")
+  images       String[]  
+  video        String?
+  status       Status    @default(PENDING)
   
-  // Relationship
-  agentId       String
-  agent         User      @relation(fields: [agentId], references: [id])
+  agentId      String
+  agent        User      @relation(fields: [agentId], references: [id])
   
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }

@@ -17,5 +17,7 @@
     "allowImportingTsExtensions": false,
     "noEmit": false,
     "outDir": "dist"
-  }
+  },
+  "include": ["backend/**/*.ts", "frontend/**/*.ts", "frontend/**/*.tsx"],
+  "exclude": ["node_modules"]
 }
