@@ -8,6 +8,7 @@
     "backend": "tsx backend/index.ts",
     "dev:backend": "tsx watch backend/index.ts",
     "build": "vite build",
+    "postinstall": "prisma generate",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev"
   },
