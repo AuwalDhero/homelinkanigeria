@@ -2,43 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HomeLinka Nigeria - Abuja's Premier Housing Agent Platform</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.474.0?external=react",
-    "@google/genai": "https://esm.sh/@google/genai",
-    "express": "https://esm.sh/express@^5.2.1",
-    "cors": "https://esm.sh/cors@^2.8.5",
-    "dotenv": "https://esm.sh/dotenv@^17.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
+    {
+        "imports": {
+            "react": "https://esm.sh/react@18.2.0",
+            "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+            "lucide-react": "https://esm.sh/lucide-react@0.474.0?external=react",
+            "@google/genai": "https://esm.sh/@google/genai"
+        }
+    }
+    </script>
+
     <style>
+        /* Base Styles */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #f9fbfc;
             color: #1a1a1a;
             margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevents side-scrolling on mobile */
+            width: 100%;
+            min-height: 100vh;
         }
+
+        /* Glass Effect - Desktop Defaults */
         .glass-effect {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        /* --- MOBILE REPAIRS --- */
+        @media (max-width: 640px) {
+            /* Fix the container width */
+            .glass-effect {
+                padding: 1.5rem !important; 
+                width: 92% !important;     
+                margin: 1rem auto !important;            
+            }
+            
+            /* Fix huge headings */
+            h1 {
+                font-size: 1.5rem !important;
+                line-height: 1.2 !important;
+            }
+
+            /* Force inputs and buttons to stay inside the screen */
+            input, button {
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Adjust header layout if it's using flex */
+            header {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                text-align: center !important;
+            }
         }
     </style>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body>
     <div id="root"></div>
-    <script type="module" src="index.tsx"></script>
-<script type="module" src="/index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

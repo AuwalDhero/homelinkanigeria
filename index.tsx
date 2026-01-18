@@ -6,12 +6,10 @@ import {
   Sparkles, TrendingUp, Building, X, Briefcase, Edit3, Trash2,
   LayoutDashboard, Building2, Settings
 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
 import { formatNaira, getWhatsAppLink } from './frontend/lib/utils';
 import PropertyCard from './frontend/components/PropertyCard';
 import FileUploader, { UploadedFile } from './frontend/components/FileUploader';
 import Badge from './frontend/components/Badge';
-
 
 // --- Types ---
 type UserRole = 'ADMIN' | 'AGENT' | 'PUBLIC';
@@ -19,7 +17,6 @@ export type Status = 'PENDING' | 'APPROVED' | 'SUSPENDED' | 'REJECTED';
 export type PropertyType = 'HOUSE' | 'ROOM' | 'APARTMENT' | 'PLOT';
 export type ListingType = 'RENT' | 'SALE';
 type AgentView = 'DASHBOARD' | 'LISTINGS' | 'LEADS' | 'SETTINGS';
-
 
 export interface AppUser {
   id: string;
@@ -87,7 +84,6 @@ const App = () => {
 
   const approvedProperties = useMemo(() => db.properties.filter(p => p.status === 'APPROVED'), [db.properties]);
   const agentProperties = useMemo(() => db.properties.filter(p => p.agentId === currentUser?.id), [db.properties, currentUser]);
-
 
   const handleLogin = (email: string, role: UserRole) => {
     const user = db.users.find(u => u.email === email && u.role === role);
@@ -158,22 +154,21 @@ const App = () => {
     }
   };
 
-
   return (
     <div className="min-h-screen flex flex-col bg-[#F9FBFC]">
-      {/* Navigation */}
-      <nav className="glass-effect sticky top-0 z-50 border-b border-slate-200/60 py-5 px-6 md:px-12 flex justify-between items-center w-full">
+      {/* Navigation - FIXED MOBILE STACKING */}
+      <nav className="glass-effect sticky top-0 z-50 border-b border-slate-200/60 py-4 px-6 md:px-12 flex flex-col sm:flex-row justify-between items-center w-full gap-4 sm:gap-0">
         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setView('HOME')}>
           <div className="bg-emerald-600 p-2.5 rounded-2xl text-white shadow-xl shadow-emerald-600/20">
             <Home size={26} strokeWidth={2.5} />
           </div>
           <span className="text-2xl font-black tracking-tighter text-slate-900">HomeLinka<span className="text-emerald-600">NG</span></span>
         </div>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center w-full sm:w-auto justify-center sm:justify-end gap-8">
           {!currentUser ? (
             <>
               <button onClick={() => setView('AGENT_LOGIN')} className="hidden md:block text-xs font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600">Agent Portal</button>
-              <button onClick={() => setView('AGENT_REGISTER')} className="bg-slate-950 text-white px-7 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">Become an Agent</button>
+              <button onClick={() => setView('AGENT_REGISTER')} className="w-full sm:w-auto bg-slate-950 text-white px-7 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">Become an Agent</button>
             </>
           ) : (
             <div className="flex items-center gap-6">
@@ -188,35 +183,36 @@ const App = () => {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-6 py-12">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
         
         {view === 'HOME' && (
           <div className="space-y-16">
-            <div className="bg-slate-900 rounded-[3rem] p-12 md:p-24 text-white relative overflow-hidden shadow-2xl">
+            <div className="bg-slate-900 rounded-[2rem] md:rounded-[3rem] p-8 md:p-24 text-white relative overflow-hidden shadow-2xl">
               <div className="absolute top-0 right-0 w-1/2 h-full bg-emerald-600/10 blur-[120px] rounded-full"></div>
               <div className="relative z-10 max-w-2xl text-left">
                 <div className="inline-flex items-center gap-2 bg-emerald-600/20 text-emerald-400 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-10 border border-emerald-500/20">
                   <Sparkles size={14} /> FCT Pilot - Abuja Verified
                 </div>
-                <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter text-left">Your Link to <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Nigeria's Best.</span></h1>
-                <p className="text-slate-400 text-xl mb-12 font-medium leading-relaxed">Verified Abuja agents. Zero hunter fees. Direct WhatsApp.</p>
+                {/* Fixed Text Size for Mobile */}
+                <h1 className="text-4xl sm:text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter text-left">Your Link to <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Nigeria's Best.</span></h1>
+                <p className="text-slate-400 text-lg md:text-xl mb-12 font-medium leading-relaxed">Verified Abuja agents. Zero hunter fees. Direct WhatsApp.</p>
                 
-                <div className="flex flex-col sm:flex-row gap-6 mb-12">
+                <div className="flex flex-col gap-4 md:flex-row md:gap-6 mb-12">
                    <div className="flex flex-1 bg-white/5 backdrop-blur-2xl rounded-3xl p-2 border border-white/10 shadow-2xl">
                     <div className="flex items-center px-4 text-emerald-500"><Search size={24} /></div>
                     <input className="bg-transparent border-none text-white py-4 w-full font-bold outline-none placeholder:text-slate-600" placeholder="Search areas like Maitama..." />
                   </div>
-                  <button onClick={() => setView('AGENT_REGISTER')} className="bg-emerald-600 text-white px-10 py-5 rounded-3xl font-black uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-xl shadow-emerald-600/20">Become an Agent</button>
+                  <button onClick={() => setView('AGENT_REGISTER')} className="w-full md:w-auto bg-emerald-600 text-white px-10 py-5 rounded-3xl font-black uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-xl shadow-emerald-600/20">Become an Agent</button>
                 </div>
               </div>
             </div>
 
             <div className="space-y-12">
-              <div className="flex items-center justify-between">
-                <h2 className="text-3xl font-black text-slate-950 uppercase tracking-tighter">Verified Listings</h2>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <h2 className="text-2xl md:text-3xl font-black text-slate-950 uppercase tracking-tighter">Verified Listings</h2>
                 <div className="text-slate-400 font-bold text-xs uppercase tracking-widest">{approvedProperties.length} Homes in Abuja</div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
                 {approvedProperties.map(p => <PropertyCard key={p.id} property={p} onClick={() => { setSelectedProperty(p); setView('DETAILS'); }} />)}
               </div>
             </div>
@@ -224,19 +220,19 @@ const App = () => {
         )}
 
         {view === 'AGENT_REGISTER' && (
-          <div className="max-w-xl mx-auto py-12">
-            <div className="bg-white rounded-[4rem] p-12 md:p-16 shadow-2xl border border-slate-50 text-center">
+          <div className="max-w-xl mx-auto py-4 md:py-12">
+            <div className="bg-white rounded-[2rem] md:rounded-[4rem] p-6 md:p-16 shadow-2xl border border-slate-50 text-center">
               <Briefcase className="mx-auto mb-8 text-emerald-600" size={60} />
-              <h1 className="text-4xl font-black text-slate-950 mb-4 tracking-tighter uppercase">Become an Agent</h1>
+              <h1 className="text-3xl md:text-4xl font-black text-slate-950 mb-4 tracking-tighter uppercase">Become an Agent</h1>
               <p className="text-slate-400 font-bold text-[10px] tracking-[0.3em] uppercase mb-12">Join the HomeLinka Network</p>
               <form onSubmit={(e: any) => {
                 e.preventDefault();
                 const d = e.target;
                 handleRegisterAgent({ name: d.name.value, email: d.email.value, phone: d.phone.value });
               }} className="space-y-6 text-left">
-                <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Full Name</label><input name="name" required className="w-full p-6 bg-slate-50 border-none rounded-3xl font-bold" placeholder="e.g. Ibrahim Musa" /></div>
-                <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Email Address</label><input name="email" required type="email" className="w-full p-6 bg-slate-50 border-none rounded-3xl font-bold" placeholder="ibrahim@example.ng" /></div>
-                <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">WhatsApp Phone</label><input name="phone" required className="w-full p-6 bg-slate-50 border-none rounded-3xl font-bold" placeholder="234..." /></div>
+                <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Full Name</label><input name="name" required className="w-full p-4 md:p-6 bg-slate-50 border-none rounded-3xl font-bold" placeholder="e.g. Ibrahim Musa" /></div>
+                <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Email Address</label><input name="email" required type="email" className="w-full p-4 md:p-6 bg-slate-50 border-none rounded-3xl font-bold" placeholder="ibrahim@example.ng" /></div>
+                <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">WhatsApp Phone</label><input name="phone" required className="w-full p-4 md:p-6 bg-slate-50 border-none rounded-3xl font-bold" placeholder="234..." /></div>
                 <button className="w-full bg-slate-950 text-white py-7 rounded-[2.2rem] font-black shadow-2xl hover:bg-slate-800 transition-all uppercase tracking-widest mt-8">Apply for Partner Access</button>
               </form>
             </div>
@@ -244,12 +240,12 @@ const App = () => {
         )}
 
         {(view === 'AGENT_LOGIN' || view === 'ADMIN_LOGIN') && (
-          <div className="flex items-center justify-center py-12">
-            <div className="w-full max-w-md bg-white p-12 md:p-16 rounded-[4rem] shadow-2xl border border-slate-50 text-center relative overflow-hidden">
+          <div className="flex items-center justify-center py-4 md:py-12">
+            <div className="w-full max-w-md bg-white p-8 md:p-16 rounded-[2.5rem] md:rounded-[4rem] shadow-2xl border border-slate-50 text-center relative overflow-hidden">
               <div className="bg-slate-950 w-24 h-24 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 text-emerald-400 shadow-2xl">
                 {view === 'ADMIN_LOGIN' ? <ShieldCheck size={48} /> : <User size={48} />}
               </div>
-              <h1 className="text-4xl font-black text-slate-950 mb-3 tracking-tighter uppercase">{view.replace('_', ' ')}</h1>
+              <h1 className="text-3xl md:text-4xl font-black text-slate-950 mb-3 tracking-tighter uppercase">{view.replace('_', ' ')}</h1>
               <form onSubmit={(e: any) => { e.preventDefault(); handleLogin(e.target.email.value, view === 'ADMIN_LOGIN' ? 'ADMIN' : 'AGENT'); }} className="space-y-6 text-left">
                 <input name="email" required type="email" className="w-full p-6 bg-slate-50 border-none rounded-3xl font-bold" placeholder="Email" />
                 <input name="password" required type="password" className="w-full p-6 bg-slate-50 border-none rounded-3xl font-bold" placeholder="Password" />
@@ -289,7 +285,7 @@ const App = () => {
             <div className="flex-1 w-full">
               {agentView === 'DASHBOARD' && (
                 <div className="space-y-8">
-                  <h1 className="text-5xl font-black text-slate-950 tracking-tighter">Dashboard</h1>
+                  <h1 className="text-4xl md:text-5xl font-black text-slate-950 tracking-tighter">Dashboard</h1>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                     {[{ label: 'Market Reach', val: 1250, icon: TrendingUp }, { label: 'Leads Secured', val: 42, icon: MessageSquare }, { label: 'Active Ads', val: agentProperties.length, icon: Building }].map((stat, i) => (
                       <div key={i} className="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm flex items-center gap-8">
@@ -301,12 +297,12 @@ const App = () => {
                 </div>
               )}
               {agentView === 'LISTINGS' && (
-                 <div className="space-y-8">
+                  <div className="space-y-8">
                   <h1 className="text-5xl font-black text-slate-950 tracking-tighter">My Listings</h1>
                   <div className="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm space-y-6">
                     {agentProperties.map(p => (
                       <div key={p.id} className="flex flex-col md:flex-row items-center gap-6 p-4 rounded-3xl hover:bg-slate-50/80 transition-colors">
-                        <img src={p.images[0]} alt={p.title} className="w-full md:w-24 h-24 object-cover rounded-2xl" />
+                        <img src={p.images[0]} alt={p.title} className="w-full md:w-24 h-48 md:h-24 object-cover rounded-2xl" />
                         <div className="flex-1 text-center md:text-left">
                           <div className="font-black text-slate-900">{p.title}</div>
                           <div className="text-sm font-bold text-slate-500">{formatNaira(p.price)}</div>
@@ -340,9 +336,9 @@ const App = () => {
 
         {view === 'AGENT_CREATE_LISTING' && (
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-[4rem] p-12 md:p-20 shadow-2xl border border-slate-50">
+            <div className="bg-white rounded-[2rem] md:rounded-[4rem] p-6 md:p-20 shadow-2xl border border-slate-50">
               <div className="flex justify-between items-center mb-16">
-                <h2 className="text-4xl font-black text-slate-950 tracking-tighter uppercase">New Property Intelligence</h2>
+                <h2 className="text-3xl md:text-4xl font-black text-slate-950 tracking-tighter uppercase">New Property Intelligence</h2>
                 <button onClick={() => setView('AGENT_DASHBOARD')} className="p-4 bg-slate-100 rounded-2xl text-slate-500 hover:text-slate-900"><XCircle size={28} /></button>
               </div>
               <form onSubmit={(e: any) => {
@@ -350,11 +346,11 @@ const App = () => {
                 const d = e.target;
                 handleCreateProperty({ title: d.title.value, description: d.description.value, price: parseFloat(d.price.value), type: d.type.value as PropertyType, listingType: d.listingType.value as ListingType, location: { state: 'FCT', city: 'Abuja', area: d.area.value } });
               }} className="space-y-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
                   <input name="title" required className="w-full p-6 bg-slate-50 border-none rounded-[2rem] font-black" placeholder="Listing Title" />
                   <input name="area" required className="w-full p-6 bg-slate-50 border-none rounded-[2rem] font-black" placeholder="Neighborhood (e.g. Jabi)" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
                   <input name="price" required type="number" className="w-full p-6 bg-slate-50 border-none rounded-[2rem] font-black" placeholder="Price (NGN)" />
                   <div className="relative">
                     <select name="type" required defaultValue="" className="w-full p-6 bg-slate-50 border-none rounded-[2rem] font-black appearance-none cursor-pointer">
@@ -396,9 +392,9 @@ const App = () => {
 
         {view === 'AGENT_EDIT_LISTING' && propertyToEdit && (
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-[4rem] p-12 md:p-20 shadow-2xl border border-slate-50">
+            <div className="bg-white rounded-[2rem] md:rounded-[4rem] p-6 md:p-20 shadow-2xl border border-slate-50">
               <div className="flex justify-between items-center mb-16">
-                <h2 className="text-4xl font-black text-slate-950 tracking-tighter uppercase">Edit Property Intelligence</h2>
+                <h2 className="text-3xl md:text-4xl font-black text-slate-950 tracking-tighter uppercase">Edit Property Intelligence</h2>
                 <button onClick={() => setView('AGENT_DASHBOARD')} className="p-4 bg-slate-100 rounded-2xl text-slate-500 hover:text-slate-900"><XCircle size={28} /></button>
               </div>
               <form onSubmit={(e: any) => {
@@ -414,7 +410,8 @@ const App = () => {
                 };
                 handleUpdateProperty(propertyToEdit.id, updatedData);
               }} className="space-y-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                {/* Form fields same as create ... */}
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                   <input name="title" required defaultValue={propertyToEdit.title} className="w-full p-6 bg-slate-50 border-none rounded-[2rem] font-black" placeholder="Listing Title" />
                   <input name="area" required defaultValue={propertyToEdit.location.area} className="w-full p-6 bg-slate-50 border-none rounded-[2rem] font-black" placeholder="Neighborhood (e.g. Jabi)" />
                 </div>
@@ -444,12 +441,8 @@ const App = () => {
                     rows={6}
                     defaultValue={propertyToEdit.description}
                     className="w-full p-10 bg-slate-50 border-none rounded-[3rem] font-medium"
-                    placeholder="Describe the property... key features, power situation, etc."
+                    placeholder="Describe the property..."
                   />
-                </div>
-                <div className="space-y-4">
-                  <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-4">Property Assets (Add New)</label>
-                  <FileUploader onFilesChange={setUploadedAssets} />
                 </div>
                 <button className="w-full bg-slate-950 text-white py-8 rounded-[2.5rem] font-black uppercase tracking-widest shadow-2xl hover:bg-slate-800 transition-all mt-10">Update & Re-Submit</button>
               </form>
@@ -459,13 +452,13 @@ const App = () => {
 
         {view === 'ADMIN_DASHBOARD' && currentUser && (
           <div className="space-y-16">
-            <h1 className="text-6xl font-black text-slate-950 tracking-tighter">Global Control</h1>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-              <div className="bg-white rounded-[4rem] border border-slate-100 overflow-hidden shadow-sm">
+            <h1 className="text-4xl md:text-6xl font-black text-slate-950 tracking-tighter">Global Control</h1>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16">
+              <div className="bg-white rounded-[2rem] md:rounded-[4rem] border border-slate-100 overflow-hidden shadow-sm">
                 <div className="p-10 border-b border-slate-50 bg-slate-50/50 font-black text-xl uppercase tracking-widest">Agent Verification</div>
                 <div className="divide-y divide-slate-50">
                   {db.users.filter(u => u.status === 'PENDING').map(u => (
-                    <div key={u.id} className="p-8 flex justify-between items-center">
+                    <div key={u.id} className="p-6 md:p-8 flex justify-between items-center">
                       <div><div className="font-black text-slate-900 text-lg">{u.name}</div><div className="text-xs text-slate-400 font-bold">{u.email}</div></div>
                       <div className="flex gap-4">
                         <button onClick={() => setDb({ ...db, users: db.users.map(x => x.id === u.id ? { ...x, status: 'APPROVED' as Status } : x) })} className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl hover:bg-emerald-100 transition-all"><CheckCircle2 size={24} /></button>
@@ -476,11 +469,11 @@ const App = () => {
                   {db.users.filter(u => u.status === 'PENDING').length === 0 && <div className="p-12 text-center text-slate-400 font-black uppercase text-xs tracking-widest">No pending applications</div>}
                 </div>
               </div>
-              <div className="bg-white rounded-[4rem] border border-slate-100 overflow-hidden shadow-sm">
+              <div className="bg-white rounded-[2rem] md:rounded-[4rem] border border-slate-100 overflow-hidden shadow-sm">
                 <div className="p-10 border-b border-slate-50 bg-slate-50/50 font-black text-xl uppercase tracking-widest">Listing Moderation</div>
                 <div className="divide-y divide-slate-50">
                   {db.properties.filter(p => p.status === 'PENDING').map(p => (
-                    <div key={p.id} className="p-8 flex items-center gap-6">
+                    <div key={p.id} className="p-6 md:p-8 flex items-center gap-6">
                       <img src={p.images[0]} className="w-16 h-16 rounded-2xl object-cover" alt={p.title} />
                       <div className="flex-1 font-black text-slate-950 uppercase text-xs">{p.title}</div>
                       <div className="flex gap-2">
@@ -495,61 +488,11 @@ const App = () => {
             </div>
           </div>
         )}
-
-        {view === 'DETAILS' && selectedProperty && (
-          <div className="py-8">
-            <button onClick={() => setView('HOME')} className="flex items-center gap-3 text-slate-400 font-black text-[11px] uppercase tracking-[0.3em] mb-12 hover:text-emerald-600 transition-all group">
-              <ChevronRight className="rotate-180 group-hover:-translate-x-1 transition-transform" size={16} strokeWidth={3} /> Back to Search
-            </button>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-20">
-              <div className="lg:col-span-2 space-y-12">
-                <div className="rounded-[4rem] overflow-hidden shadow-2xl aspect-[16/10] border border-slate-100 bg-slate-200">
-                  <img src={selectedProperty.images[0]} className="w-full h-full object-cover" alt={selectedProperty.title} />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 text-emerald-600 font-black text-xs uppercase mb-4 tracking-[0.3em]"><MapPin size={20} strokeWidth={4} /> {selectedProperty.location.area}, Abuja</div>
-                  <h1 className="text-5xl md:text-7xl font-black text-slate-950 leading-tight mb-12 tracking-tighter">{selectedProperty.title}</h1>
-                  <p className="text-slate-600 text-xl leading-relaxed bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm font-medium italic">"{selectedProperty.description}"</p>
-                </div>
-              </div>
-              <aside className="space-y-8 sticky top-36 h-fit">
-                <div className="bg-white p-12 rounded-[3.5rem] border border-slate-100 shadow-2xl text-center">
-                  <div className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-6">Price</div>
-                  <div className="text-5xl font-black text-slate-950 mb-12">{formatNaira(selectedProperty.price)}</div>
-                  <div className="space-y-4">
-                    <a href={`tel:${selectedProperty.agentPhone}`} className="block w-full bg-slate-950 text-white py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-xl">Call Agent</a>
-                    <a href={getWhatsAppLink(selectedProperty.agentPhone, selectedProperty.title)} target="_blank" className="block w-full bg-emerald-600 text-white py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-xl">WhatsApp</a>
-                  </div>
-                </div>
-              </aside>
-            </div>
-          </div>
-        )}
       </main>
-
-      {/* Footer */}
-      <footer className="mt-32 border-t border-slate-200/50 py-32 px-12 bg-white">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between gap-24">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-3 mb-10">
-              <div className="bg-emerald-600 p-3 rounded-2xl text-white shadow-xl shadow-emerald-600/20"><Home size={28} strokeWidth={3} /></div>
-              <span className="text-3xl font-black tracking-tighter text-slate-900">HomeLinka<span className="text-emerald-600">NG</span></span>
-            </div>
-            <p className="text-slate-400 font-black text-2xl tracking-tighter italic leading-[1.2]">"Redefining premium real estate in the Federal Capital Territory."</p>
-          </div>
-          <div className="grid grid-cols-2 gap-20">
-            <div><h4 className="font-black text-slate-950 mb-8 uppercase text-[11px] tracking-widest">Districts</h4><ul className="text-slate-500 font-bold space-y-4"><li>Maitama</li><li>Wuse II</li><li>Asokoro</li></ul></div>
-            <div><h4 className="font-black text-slate-950 mb-8 uppercase text-[11px] tracking-widest">Governance</h4><ul className="text-slate-500 font-bold space-y-4"><li>Safety Hub</li><li>Privacy Charter</li><li>Compliance</li></ul></div>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto mt-20 pt-10 border-t border-slate-50 flex flex-col md:flex-row justify-between items-center text-[10px] font-black text-slate-300 uppercase tracking-widest">
-          <div>© 2025 HomeLinka Nigeria - FCT Pilot</div>
-          <div className="flex gap-8"><span>Compliance</span><span>Security Dept</span></div>
-        </div>
-      </footer>
     </div>
   );
 };
 
+// Mount the App
 const root = createRoot(document.getElementById('root')!);
 root.render(<App />);
