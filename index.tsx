@@ -167,7 +167,7 @@ const App = () => {
         <div className="flex items-center w-full sm:w-auto justify-center sm:justify-end gap-8">
           {!currentUser ? (
             <>
-              <button onClick={() => setView('AGENT_LOGIN')} className="hidden md:block text-xs font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600">Agent Portal</button>
+              <button onClick={() => setView('AGENT_LOGIN')} className="text-xs font-black uppercase tracking-widest text-slate-500 hover:text-emerald-600">Agent Portal</button>
               <button onClick={() => setView('AGENT_REGISTER')} className="w-full sm:w-auto bg-slate-950 text-white px-7 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200">Become an Agent</button>
             </>
           ) : (
